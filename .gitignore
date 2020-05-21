@@ -1,6 +1,5 @@
-HELP.md
-target/
-!.mvn/wrapper/maven-wrapper.jar
+customerservice/HELP.md
+customerservice/target/
 !**/src/main/**
 !**/src/test/**
 
@@ -14,7 +13,11 @@ target/
 .sts4-cache
 
 ### IntelliJ IDEA ###
+customerservice/.idea
 .idea
+customerservice/.mvn
+customerservice/target
+
 *.iws
 *.iml
 *.ipr
