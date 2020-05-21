@@ -23,19 +23,17 @@ var (
 )
 
 func main() {
-
 	initOrders()
 	handleRequests()
-	redisInit()
-
 }
 
-func redisInit() {
-	_, err := redis.Dial("tcp", "localhost:6379")
+func redisInit() redis.Conn {
+	conn, err := redis.Dial("tcp", "localhost:6379")
 
 	if err != nil {
-		panic(err)
+		panic(err.Error())
 	}
+	return conn
 	// conn.Do("HMSET", 1, "CustomerID", 2, "OrderID", 2)
 	// conn.Do("SET", "Amandeep", "some")
 
@@ -69,10 +67,12 @@ func handleRequests() {
 }
 
 func initOrders() {
-	orders = []Order{
-		Order{OrderID: 21, CustomerID: 1, Name: "Jam"},
-		Order{OrderID: 31, CustomerID: 2, Name: "burger"},
-	}
+	conn := redisInit()
+
+	conn.Do("HMSET", 1, "OrderID", 21, "Name", "Burger")
+	conn.Do("HMSET", 2, "OrderID", 31, "Name", "Pizza")
+
+	conn.Close()
 }
 
 func returnAllOrders(w http.ResponseWriter, r *http.Request) {
@@ -81,13 +81,18 @@ func returnAllOrders(w http.ResponseWriter, r *http.Request) {
 }
 
 func returnOrder(w http.ResponseWriter, r *http.Request) {
+	conn := redisInit()
+
 	vars := mux.Vars(r)
 	key, _ := strconv.Atoi(vars["customerId"])
 
-	for _, article := range orders {
-		if article.CustomerID == key {
-			json.NewEncoder(w).Encode(article)
-			break
-		}
+	value, err := redis.Values(conn.Do("HGETALL", key))
+	if err != nil {
+		panic(err.Error())
 	}
+
+	var object Order
+
+	err = redis.ScanStruct(value, &object)
+	json.NewEncoder(w).Encode(object)
 }
