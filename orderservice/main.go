@@ -8,12 +8,14 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/gomodule/redigo/redis"
 	"github.com/gorilla/mux"
 )
 
 type Order struct {
 	OrderID    int
 	CustomerID int
+	Name       string
 }
 
 var (
@@ -24,6 +26,33 @@ func main() {
 
 	initOrders()
 	handleRequests()
+	redisInit()
+
+}
+
+func redisInit() {
+	_, err := redis.Dial("tcp", "localhost:6379")
+
+	if err != nil {
+		panic(err)
+	}
+	// conn.Do("HMSET", 1, "CustomerID", 2, "OrderID", 2)
+	// conn.Do("SET", "Amandeep", "some")
+
+	// value, err := redis.Values(conn.Do("HGETALL", 1))
+	// if err != nil {
+	// 	return
+	// }
+
+	// var object Order
+
+	// fmt.Println("Before ", object)
+	// err = redis.ScanStruct(value, &object)
+
+	// fmt.Println(object)
+	// if err != nil {
+	// 	return
+	// }
 }
 
 func handleRequests() {
@@ -41,8 +70,8 @@ func handleRequests() {
 
 func initOrders() {
 	orders = []Order{
-		Order{OrderID: 21, CustomerID: 1},
-		Order{OrderID: 31, CustomerID: 2},
+		Order{OrderID: 21, CustomerID: 1, Name: "Jam"},
+		Order{OrderID: 31, CustomerID: 2, Name: "burger"},
 	}
 }
 
