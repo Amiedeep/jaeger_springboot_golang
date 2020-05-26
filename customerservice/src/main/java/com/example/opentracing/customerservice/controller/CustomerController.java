@@ -4,7 +4,10 @@ package com.example.opentracing.customerservice.controller;
 import com.example.opentracing.customerservice.model.Customer;
 import com.example.opentracing.customerservice.service.CustomerService;
 import io.jaegertracing.internal.JaegerTracer;
+import io.opentracing.Scope;
 import io.opentracing.Span;
+import io.opentracing.Tracer;
+import io.opentracing.util.GlobalTracer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,20 +19,19 @@ import java.util.List;
 @RestController
 public class CustomerController {
 
-
-    @Autowired
-    private JaegerTracer jaegerTracer;
-
     @Autowired
     private CustomerService customerService;
 
+    public Tracer tracer = GlobalTracer.get();
+
     @RequestMapping("/customers")
-    public ResponseEntity findAll() {
-        Span span = jaegerTracer.buildSpan("Hello").start();
-
-        List<Customer> customers =  customerService.findCustomers();
-        span.finish();
-
-        return ResponseEntity.status(HttpStatus.OK).body(customers);
+    public ResponseEntity<Object> findAll() {
+        Span span = tracer.buildSpan("customers controller").start();
+        try (Scope scope = tracer.scopeManager().activate(span)) {
+            List<Customer> customers =  customerService.findCustomers();
+            return ResponseEntity.status(HttpStatus.OK).body(customers);
+        } finally{
+            span.finish();
+        }
     }
 }

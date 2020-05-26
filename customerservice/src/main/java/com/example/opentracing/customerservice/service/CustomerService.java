@@ -7,6 +7,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.example.opentracing.customerservice.utils.http.getHttp;
+
+
 @Service
 public class CustomerService {
 
@@ -14,6 +17,7 @@ public class CustomerService {
     private CustomerRepository customerRepository;
 
     public List<Customer> findCustomers() {
+        String output = getHttp(8081, "orders/1");
         return customerRepository.findAll();
     }
 }

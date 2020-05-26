@@ -3,6 +3,7 @@ package com.example.opentracing.customerservice;
 import io.jaegertracing.Configuration;
 import io.jaegertracing.internal.JaegerTracer;
 import io.jaegertracing.internal.samplers.ConstSampler;
+import io.opentracing.util.GlobalTracer;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -11,11 +12,6 @@ import org.springframework.context.annotation.Bean;
 public class CustomerserviceApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(CustomerserviceApplication.class, args);
-	}
-
-	@Bean
-	public JaegerTracer getJaegerTracer() {
 
 		Configuration.SamplerConfiguration samplerConfig = Configuration.SamplerConfiguration.fromEnv()
 				.withType(ConstSampler.TYPE)
@@ -28,6 +24,8 @@ public class CustomerserviceApplication {
 				.withSampler(samplerConfig)
 				.withReporter(reporterConfig);
 
-		return config.getTracer();
+		GlobalTracer.registerIfAbsent(config.getTracer());
+
+		SpringApplication.run(CustomerserviceApplication.class, args);
 	}
 }
