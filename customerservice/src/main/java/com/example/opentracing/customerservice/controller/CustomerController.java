@@ -1,11 +1,13 @@
 package com.example.opentracing.customerservice.controller;
 
 
-import com.example.opentracing.customerservice.model.Person;
-import com.example.opentracing.customerservice.repository.PersonRepository;
+import com.example.opentracing.customerservice.model.Customer;
+import com.example.opentracing.customerservice.service.CustomerService;
 import io.jaegertracing.internal.JaegerTracer;
 import io.opentracing.Span;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -19,14 +21,15 @@ public class CustomerController {
     private JaegerTracer jaegerTracer;
 
     @Autowired
-    private PersonRepository personRepository;
+    private CustomerService customerService;
 
     @RequestMapping("/customers")
-    public String index() {
+    public ResponseEntity findAll() {
         Span span = jaegerTracer.buildSpan("Hello").start();
 
-        List<Person> customers =  personRepository.findAll();
+        List<Customer> customers =  customerService.findCustomers();
         span.finish();
-        return "Greetings from Spring Boot!";
+
+        return ResponseEntity.status(HttpStatus.OK).body(customers);
     }
 }
