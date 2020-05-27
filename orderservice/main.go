@@ -62,8 +62,8 @@ func handleRequests() {
 	myRouter.HandleFunc("/orders", returnAllOrders)
 	myRouter.HandleFunc("/orders/{customerId}", returnOrder)
 
-	log.Println("Listening on localhost:8080")
-	log.Fatal(http.ListenAndServe(":8080", myRouter))
+	log.Println("Listening on localhost:8081")
+	log.Fatal(http.ListenAndServe(":8081", myRouter))
 }
 
 func initOrders() {
