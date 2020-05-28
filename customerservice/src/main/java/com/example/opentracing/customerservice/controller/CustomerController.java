@@ -22,11 +22,11 @@ public class CustomerController {
     @Autowired
     private CustomerService customerService;
 
-    public Tracer tracer = GlobalTracer.get();
+    Tracer tracer = GlobalTracer.get();
 
     @RequestMapping("/customers")
     public ResponseEntity<Object> findAll() {
-        Span span = tracer.buildSpan("customers controller").start();
+        Span span = tracer.buildSpan("controller").start();
         try (Scope scope = tracer.scopeManager().activate(span)) {
             List<Customer> customers =  customerService.findCustomers();
             return ResponseEntity.status(HttpStatus.OK).body(customers);
