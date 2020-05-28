@@ -2,14 +2,13 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
-	"html"
 	"log"
 	"net/http"
-	"strconv"
 
 	"github.com/gomodule/redigo/redis"
 	"github.com/gorilla/mux"
+	"github.com/opentracing-contrib/go-stdlib/nethttp"
+	"github.com/yurishkuro/opentracing-tutorial/go/lib/tracing"
 )
 
 type Order struct {
@@ -19,7 +18,8 @@ type Order struct {
 }
 
 var (
-	orders []Order
+	orders    []Order
+	tracer, _ = tracing.Init("order-service")
 )
 
 func main() {
@@ -34,36 +34,14 @@ func redisInit() redis.Conn {
 		panic(err.Error())
 	}
 	return conn
-	// conn.Do("HMSET", 1, "CustomerID", 2, "OrderID", 2)
-	// conn.Do("SET", "Amandeep", "some")
-
-	// value, err := redis.Values(conn.Do("HGETALL", 1))
-	// if err != nil {
-	// 	return
-	// }
-
-	// var object Order
-
-	// fmt.Println("Before ", object)
-	// err = redis.ScanStruct(value, &object)
-
-	// fmt.Println(object)
-	// if err != nil {
-	// 	return
-	// }
 }
 
 func handleRequests() {
 	myRouter := mux.NewRouter().StrictSlash(true)
-
-	myRouter.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "Hello, %q", html.EscapeString(r.URL.Path))
-	})
-	myRouter.HandleFunc("/orders", returnAllOrders)
-	myRouter.HandleFunc("/orders/{customerId}", returnOrder)
+	myRouter.Path("/orders").Queries("customerID", "{customerID}").HandlerFunc(returnOrder)
 
 	log.Println("Listening on localhost:8081")
-	log.Fatal(http.ListenAndServe(":8081", myRouter))
+	log.Fatal(http.ListenAndServe(":8081", nethttp.Middleware(tracer, myRouter)))
 }
 
 func initOrders() {
@@ -75,18 +53,16 @@ func initOrders() {
 	conn.Close()
 }
 
-func returnAllOrders(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Endpoint Hit: returnAllOrders")
-	json.NewEncoder(w).Encode(orders)
-}
+// func returnAllOrders(w http.ResponseWriter, r *http.Request) {
+// 	fmt.Println("Endpoint Hit: returnAllOrders")
+// 	json.NewEncoder(w).Encode(orders)
+// }
 
 func returnOrder(w http.ResponseWriter, r *http.Request) {
 	conn := redisInit()
 
 	vars := mux.Vars(r)
-	key, _ := strconv.Atoi(vars["customerId"])
-
-	value, err := redis.Values(conn.Do("HGETALL", key))
+	value, err := redis.Values(conn.Do("HGETALL", vars["customerID"]))
 	if err != nil {
 		panic(err.Error())
 	}
