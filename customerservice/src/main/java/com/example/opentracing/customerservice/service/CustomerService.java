@@ -23,14 +23,14 @@ public class CustomerService {
     @Autowired
     private CustomerRepository customerRepository;
 
-    Tracer tracer = GlobalTracer.get();
+    Tracer postgresTracer = Tracing.init("postgres");
 
     public List<Customer> findCustomers() {
 
         String output = getHttp(8081, "orders");
 
-        Span span = tracer.buildSpan("Postgres-service").start();
-        try (Scope scope = tracer.scopeManager().activate(span)) {
+        Span span = postgresTracer.buildSpan("postgres").asChildOf(GlobalTracer.get().activeSpan()).start();
+        try (Scope scope = postgresTracer.scopeManager().activate(span)) {
             return customerRepository.findAll();
         } finally{
             span.finish();
