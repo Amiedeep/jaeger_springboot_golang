@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	tracer, _ = tracing.Init("order-service")
+	tracer, _ = tracing.Init("order")
 )
 
 func main() {
