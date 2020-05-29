@@ -1,12 +1,12 @@
 package com.example.opentracing.customerservice.utils;
 
 import io.jaegertracing.Configuration;
+import io.jaegertracing.internal.JaegerTracer;
 import io.jaegertracing.internal.samplers.ConstSampler;
-import io.opentracing.util.GlobalTracer;
 
 public class Tracing {
 
-    public static void init() {
+    public static JaegerTracer init(String serviceName) {
         Configuration.SamplerConfiguration samplerConfig = Configuration.SamplerConfiguration.fromEnv()
                 .withType(ConstSampler.TYPE)
                 .withParam(1);
@@ -14,10 +14,10 @@ public class Tracing {
         Configuration.ReporterConfiguration reporterConfig = Configuration.ReporterConfiguration.fromEnv()
                 .withLogSpans(true);
 
-        Configuration config = new Configuration("customer-service")
+        Configuration config = new Configuration(serviceName)
                 .withSampler(samplerConfig)
                 .withReporter(reporterConfig);
 
-        GlobalTracer.registerIfAbsent(config.getTracer());
+        return config.getTracer();
     }
 }

@@ -2,6 +2,7 @@ package com.example.opentracing.customerservice.service;
 
 import com.example.opentracing.customerservice.model.Customer;
 import com.example.opentracing.customerservice.repository.CustomerRepository;
+import com.example.opentracing.customerservice.utils.Tracing;
 import io.opentracing.Scope;
 import io.opentracing.Span;
 import io.opentracing.Tracer;

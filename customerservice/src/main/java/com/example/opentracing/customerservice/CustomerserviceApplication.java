@@ -14,8 +14,8 @@ public class CustomerserviceApplication {
 
 	public static void main(String[] args) {
 
-		Tracing.init();
-
+		JaegerTracer tracer = Tracing.init("customer");
+		GlobalTracer.registerIfAbsent(tracer);
 		SpringApplication.run(CustomerserviceApplication.class, args);
 	}
 }
