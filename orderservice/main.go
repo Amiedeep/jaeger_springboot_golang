@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/amiedeep/jaeger_springboot_golang/orderservice/app"
+	app "github.com/amiedeep/jaeger_springboot_golang/orderservice/app"
 	"github.com/gorilla/mux"
 	"github.com/opentracing-contrib/go-stdlib/nethttp"
 	"github.com/yurishkuro/opentracing-tutorial/go/lib/tracing"
@@ -15,7 +15,7 @@ var (
 )
 
 func main() {
-	CreateSeeddata()
+	app.CreateSeeddata()
 	handleRequests()
 }
 
