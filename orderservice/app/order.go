@@ -20,11 +20,9 @@ var (
 
 //ReturnOrder find order of customer
 func ReturnOrder(w http.ResponseWriter, r *http.Request) {
-
 	ctx := r.Context()
-
-	customerID := mux.Vars(r)["customerID"]
 	var order Order
+	customerID := mux.Vars(r)["customerID"]
 
 	Find(ctx, customerID, &order)
 

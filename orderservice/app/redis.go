@@ -9,10 +9,6 @@ import (
 	"github.com/yurishkuro/opentracing-tutorial/go/lib/tracing"
 )
 
-// type Database struct {
-// tracer, _ := tracing.Init("redis", metricsFactory, logger),
-// }
-
 var (
 	redisTracer, _ = tracing.Init("redis")
 )
@@ -40,12 +36,11 @@ func GetConn() redis.Conn {
 //Find serach redis and return an object
 func Find(ctx context.Context, param string, object interface{}) {
 
-	if span := opentracing.SpanFromContext(ctx); span != nil {
-		span := redisTracer.StartSpan("HMETALL", opentracing.ChildOf(span.Context()))
-		tags.SpanKindRPCClient.Set(span)
-		tags.PeerService.Set(span, "redis")
-		defer span.Finish()
-	}
+	span, _ := opentracing.StartSpanFromContextWithTracer(ctx, redisTracer, "HMETALL")
+	defer span.Finish()
+
+	tags.SpanKindRPCClient.Set(span)
+	tags.PeerService.Set(span, "redis")
 
 	conn := GetConn()
 

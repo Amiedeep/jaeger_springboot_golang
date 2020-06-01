@@ -24,4 +24,5 @@ func handleRequests() {
 
 	log.Println("Listening on localhost:8081")
 	log.Fatal(http.ListenAndServe(":8081", nethttp.Middleware(tracer, myRouter)))
+	log.Fatal(http.ListenAndServe(":8081", nethttp.Middleware(tracer, myRouter)))
 }
