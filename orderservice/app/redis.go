@@ -25,7 +25,7 @@ func CreateSeeddata() {
 
 //GetConn return redis connection
 func GetConn() redis.Conn {
-	conn, err := redis.Dial("tcp", "localhost:6379")
+	conn, err := redis.Dial("tcp", "redis:6379")
 
 	if err != nil {
 		panic(err.Error())
