@@ -8,8 +8,6 @@ import io.opentracing.Span;
 import io.opentracing.Tracer;
 import io.opentracing.util.GlobalTracer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,9 +23,9 @@ public class CustomerService {
 
     Tracer postgresTracer = Tracing.init("postgres");
 
-    public List<Customer> findCustomers() {
+    public List<Customer> findCustomers(int customerID) {
 
-        String output = getHttp(8081, "orders");
+        String output = getHttp(8081, "orders", customerID);
 
         Span span = postgresTracer.buildSpan("postgres").asChildOf(GlobalTracer.get().activeSpan()).start();
         try (Scope scope = postgresTracer.scopeManager().activate(span)) {
@@ -35,6 +33,5 @@ public class CustomerService {
         } finally{
             span.finish();
         }
-
     }
 }

@@ -5,7 +5,6 @@ import io.opentracing.Span;
 import io.opentracing.Tracer;
 import io.opentracing.propagation.Format;
 import io.opentracing.propagation.TextMap;
-import io.opentracing.tag.Tag;
 import io.opentracing.tag.Tags;
 import io.opentracing.util.GlobalTracer;
 import okhttp3.HttpUrl;
@@ -35,19 +34,19 @@ public class http {
         };
     }
 
-    public static String getHttp(int port, String path) {
+    public static String getHttp(int port, String path, int customerID) {
         Tracer tracer = GlobalTracer.get();
         Span span = tracer.buildSpan("order-service").start();
         try (Scope scope = tracer.scopeManager().activate(span)) {
 
 
             HttpUrl url = new HttpUrl.Builder().scheme("http").host("localhost").port(port).addPathSegment(path)
-                    .addQueryParameter("customerID", "1").build();
+                    .addQueryParameter("customerID", String.valueOf(customerID)).build();
             Request.Builder requestBuilder = new Request.Builder().url(url);
 
             Tags.SPAN_KIND.set(tracer.activeSpan(), Tags.SPAN_KIND_CLIENT);
             Tags.HTTP_METHOD.set(tracer.activeSpan(), "GET");
-            Tags.PEER_SERVICE.set(span, "mysql");
+            Tags.PEER_SERVICE.set(span, "postgres");
             Tags.HTTP_URL.set(tracer.activeSpan(), url.toString());
             tracer.inject(tracer.activeSpan().context(), Format.Builtin.HTTP_HEADERS, requestBuilderCarrier(requestBuilder));
 
