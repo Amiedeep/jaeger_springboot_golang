@@ -4,6 +4,10 @@ This project consists of two rudimentary micro-services having separate database
 
 > **Note:** This project is done only for experimental purposes and should only be used as a reference.
 
+## Architecture 
+
+![Architecture diagram](./architecture.jpg)
+
 ## Pre-requisites
 
 - Java, 1.8 is the tested version.
