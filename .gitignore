@@ -15,7 +15,6 @@ customerservice/target/
 ### IntelliJ IDEA ###
 customerservice/.idea
 .idea
-customerservice/.mvn
 customerservice/target
 
 *.iws
