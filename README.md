@@ -64,7 +64,7 @@ Open browser or use a curl client to invoke /customer api:
 
 
 ```bash
-curl localhost:8080/customers/1
+curl localhost:8080/customer/1
 ```
 
 > **Note:** Ignore the output of the curl command; It is not relevent to Jaeger and this project.

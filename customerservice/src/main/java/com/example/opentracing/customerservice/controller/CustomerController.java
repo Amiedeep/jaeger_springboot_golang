@@ -25,11 +25,11 @@ public class CustomerController {
 
     Tracer tracer = GlobalTracer.get();
 
-    @RequestMapping("/customers/{customerID}")
+    @RequestMapping("/customer/{customerID}")
     public ResponseEntity<Object> get(@PathVariable long customerID) {
         Span span = tracer.buildSpan("controller").start();
         try (Scope scope = tracer.scopeManager().activate(span)) {
-            List<Customer> customers =  customerService.findCustomers(customerID);
+            List<Customer> customers =  customerService.findCustomer(customerID);
             return ResponseEntity.status(HttpStatus.OK).body(customers);
         } finally{
             span.finish();

@@ -23,7 +23,7 @@ public class CustomerService {
 
     Tracer postgresTracer = Tracing.init("postgres");
 
-    public List<Customer> findCustomers(long customerID) {
+    public List<Customer> findCustomer(long customerID) {
 
         String output = getHttp(8081, "orders", customerID);
 
