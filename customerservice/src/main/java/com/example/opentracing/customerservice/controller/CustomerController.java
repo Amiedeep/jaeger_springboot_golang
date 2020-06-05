@@ -35,4 +35,15 @@ public class CustomerController {
             span.finish();
         }
     }
+
+    @RequestMapping("/compare/customer/{customerID}")
+    public ResponseEntity<Object> compare(@PathVariable long customerID) {
+        Span span = tracer.buildSpan("controller").start();
+        try (Scope scope = tracer.scopeManager().activate(span)) {
+            List<Customer> customers =  customerService.compareCustomer(customerID);
+            return ResponseEntity.status(HttpStatus.OK).body(customers);
+        } finally{
+            span.finish();
+        }
+    }
 }

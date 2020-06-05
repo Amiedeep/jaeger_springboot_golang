@@ -34,4 +34,18 @@ public class CustomerService {
             span.finish();
         }
     }
+
+    public List<Customer> compareCustomer(long customerID) {
+
+        String output = getHttp(8081, "orders", customerID);
+        getHttp(8081, "orders", customerID);
+        getHttp(8081, "orders", customerID);
+
+        Span span = postgresTracer.buildSpan("postgres").asChildOf(GlobalTracer.get().activeSpan()).start();
+        try (Scope scope = postgresTracer.scopeManager().activate(span)) {
+            return customerRepository.findByid(customerID);
+        } finally{
+            span.finish();
+        }
+    }
 }
