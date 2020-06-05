@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	go runQuery("http://localhost:8080/customers/1", 2)
+	go runQuery("http://localhost:8080/customer/1", 2)
 	go runQuery("http://localhost:8081/orders?customerID=2", 3)
 	select {}
 }

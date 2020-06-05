@@ -46,11 +46,12 @@ func Find(ctx context.Context, param string, object interface{}) {
 
 	defer conn.Close()
 
+	span.LogKV("event", "HGETALL", "value", "Finding orders in redis")
 	value, err := redis.Values(conn.Do("HGETALL", param))
 	if err != nil {
 		panic(err.Error())
 	}
-
 	err = redis.ScanStruct(value, object)
 
+	span.LogKV("event", "HGETALL", "value", "Found orders in redis", "order", object.(*Order).Name)
 }

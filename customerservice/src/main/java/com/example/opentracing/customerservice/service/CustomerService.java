@@ -3,6 +3,7 @@ package com.example.opentracing.customerservice.service;
 import com.example.opentracing.customerservice.model.Customer;
 import com.example.opentracing.customerservice.repository.CustomerRepository;
 import com.example.opentracing.customerservice.utils.Tracing;
+import com.google.common.collect.ImmutableMap;
 import io.opentracing.Scope;
 import io.opentracing.Span;
 import io.opentracing.Tracer;
@@ -29,7 +30,10 @@ public class CustomerService {
 
         Span span = postgresTracer.buildSpan("postgres").asChildOf(GlobalTracer.get().activeSpan()).start();
         try (Scope scope = postgresTracer.scopeManager().activate(span)) {
-            return customerRepository.findByid(customerID);
+            span.log(ImmutableMap.of("event", "Searching customer", "value", customerID));
+            List<Customer> customers = customerRepository.findByid(customerID);
+            span.log(ImmutableMap.of("event", "found customer", "name", customers.get(0).name));
+            return customers;
         } finally{
             span.finish();
         }

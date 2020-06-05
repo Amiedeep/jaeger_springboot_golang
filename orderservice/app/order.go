@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/opentracing/opentracing-go"
 )
 
 //Order model
@@ -21,8 +22,13 @@ var (
 //ReturnOrder find order of customer
 func ReturnOrder(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
+	span := opentracing.SpanFromContext(ctx)
+
 	var order Order
 	customerID := mux.Vars(r)["customerID"]
+
+	span.SetTag("customerID", customerID)
+	span.LogKV("event", "Get Orders", "value", "Received get orders request for a customer", "customerID", customerID)
 
 	Find(ctx, customerID, &order)
 

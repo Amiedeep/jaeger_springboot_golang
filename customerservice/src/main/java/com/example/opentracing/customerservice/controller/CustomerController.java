@@ -28,6 +28,9 @@ public class CustomerController {
     @RequestMapping("/customer/{customerID}")
     public ResponseEntity<Object> get(@PathVariable long customerID) {
         Span span = tracer.buildSpan("controller").start();
+        span.setTag("customerID", customerID);
+        span.log(ImmutableMap.of("event", "Get Customer", "value", "Received get customer request", "id", customerID));
+
         try (Scope scope = tracer.scopeManager().activate(span)) {
             List<Customer> customers =  customerService.findCustomer(customerID);
             return ResponseEntity.status(HttpStatus.OK).body(customers);

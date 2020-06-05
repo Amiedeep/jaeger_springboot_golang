@@ -1,5 +1,6 @@
 package com.example.opentracing.customerservice.utils;
 
+import com.google.common.collect.ImmutableMap;
 import io.opentracing.Scope;
 import io.opentracing.Span;
 import io.opentracing.Tracer;
@@ -36,7 +37,8 @@ public class http {
 
     public static String getHttp(int port, String path, long customerID) {
         Tracer tracer = GlobalTracer.get();
-        Span span = tracer.buildSpan("order-service").start();
+        Span span = tracer.buildSpan("order-service client").start();
+
         try (Scope scope = tracer.scopeManager().activate(span)) {
 
 
@@ -51,6 +53,7 @@ public class http {
             tracer.inject(tracer.activeSpan().context(), Format.Builtin.HTTP_HEADERS, requestBuilderCarrier(requestBuilder));
 
             Request request = requestBuilder.build();
+            span.log(ImmutableMap.of("event", "Searching order", "value", "Calling order service for orders of customer", "customerID", customerID));
             Response response = client.newCall(request).execute();
             if (response.code() != 200) {
                 throw new RuntimeException("Bad HTTP result: " + response);
