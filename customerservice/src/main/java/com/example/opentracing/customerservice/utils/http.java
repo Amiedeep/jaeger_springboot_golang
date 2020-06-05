@@ -34,7 +34,7 @@ public class http {
         };
     }
 
-    public static String getHttp(int port, String path, int customerID) {
+    public static String getHttp(int port, String path, long customerID) {
         Tracer tracer = GlobalTracer.get();
         Span span = tracer.buildSpan("order-service").start();
         try (Scope scope = tracer.scopeManager().activate(span)) {
@@ -46,7 +46,7 @@ public class http {
 
             Tags.SPAN_KIND.set(tracer.activeSpan(), Tags.SPAN_KIND_CLIENT);
             Tags.HTTP_METHOD.set(tracer.activeSpan(), "GET");
-            Tags.PEER_SERVICE.set(span, "postgres");
+            Tags.PEER_SERVICE.set(span, "Postgres");
             Tags.HTTP_URL.set(tracer.activeSpan(), url.toString());
             tracer.inject(tracer.activeSpan().context(), Format.Builtin.HTTP_HEADERS, requestBuilderCarrier(requestBuilder));
 

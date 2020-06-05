@@ -23,13 +23,13 @@ public class CustomerService {
 
     Tracer postgresTracer = Tracing.init("postgres");
 
-    public List<Customer> findCustomers(int customerID) {
+    public List<Customer> findCustomers(long customerID) {
 
         String output = getHttp(8081, "orders", customerID);
 
         Span span = postgresTracer.buildSpan("postgres").asChildOf(GlobalTracer.get().activeSpan()).start();
         try (Scope scope = postgresTracer.scopeManager().activate(span)) {
-            return customerRepository.findAll();
+            return customerRepository.findByid(customerID);
         } finally{
             span.finish();
         }

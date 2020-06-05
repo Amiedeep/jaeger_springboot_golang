@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import com.google.common.collect.ImmutableMap;
 
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class CustomerController {
     Tracer tracer = GlobalTracer.get();
 
     @RequestMapping("/customers/{customerID}")
-    public ResponseEntity<Object> findAll(@PathVariable int customerID) {
+    public ResponseEntity<Object> get(@PathVariable long customerID) {
         Span span = tracer.buildSpan("controller").start();
         try (Scope scope = tracer.scopeManager().activate(span)) {
             List<Customer> customers =  customerService.findCustomers(customerID);
