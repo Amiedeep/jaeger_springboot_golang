@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.common.collect.ImmutableMap;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class CustomerController {
@@ -33,8 +34,8 @@ public class CustomerController {
         span.setBaggageItem("loggedInUser", "Amandeep");
 
         try (Scope scope = tracer.scopeManager().activate(span)) {
-            List<Customer> customers =  customerService.findCustomer(customerID);
-            return ResponseEntity.status(HttpStatus.OK).body(customers);
+            Map<String, Object> customer =  customerService.findCustomer(customerID);
+            return ResponseEntity.status(HttpStatus.OK).body(customer);
         } finally{
             span.finish();
         }
@@ -43,9 +44,13 @@ public class CustomerController {
     @RequestMapping("/compare/customer/{customerID}")
     public ResponseEntity<Object> compare(@PathVariable long customerID) {
         Span span = tracer.buildSpan("controller").start();
+        span.setTag("customerID", customerID);
+        span.log(ImmutableMap.of("event", "Get Customer", "value", "Received get customer request", "id", customerID));
+        span.setBaggageItem("loggedInUser", "Amandeep");
+
         try (Scope scope = tracer.scopeManager().activate(span)) {
-            List<Customer> customers =  customerService.compareCustomer(customerID);
-            return ResponseEntity.status(HttpStatus.OK).body(customers);
+            Map<String, Object> customer =  customerService.compareCustomer(customerID);
+            return ResponseEntity.status(HttpStatus.OK).body(customer);
         } finally{
             span.finish();
         }
