@@ -3,18 +3,16 @@ package com.example.opentracing.customerservice.service;
 import com.example.opentracing.customerservice.model.Customer;
 import com.example.opentracing.customerservice.repository.CustomerRepository;
 import com.example.opentracing.customerservice.utils.Tracing;
-import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.google.common.collect.ImmutableMap;
-import com.google.gson.JsonObject;
 import io.opentracing.Scope;
 import io.opentracing.Span;
 import io.opentracing.Tracer;
+import io.opentracing.tag.Tags;
 import io.opentracing.util.GlobalTracer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static com.example.opentracing.customerservice.utils.http.getHttp;
@@ -39,6 +37,7 @@ public class CustomerService {
             Customer customer = customerRepository.findByid(customerID);
             if(customer == null) {
                 span.log(ImmutableMap.of("event", "customer not found", "id", customerID));
+                Tags.ERROR.set(span, true);
                 response.put("Error", "Customer not found");
                 return response;
             }
@@ -67,6 +66,7 @@ public class CustomerService {
             Customer customer = customerRepository.findByid(customerID);
             if(customer == null) {
                 span.log(ImmutableMap.of("event", "customer not found", "id", customerID));
+                Tags.ERROR.set(span, true);
                 response.put("Error", "Customer not found");
                 return response;
             }
