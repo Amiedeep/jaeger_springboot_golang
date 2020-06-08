@@ -30,6 +30,7 @@ public class CustomerController {
         Span span = tracer.buildSpan("controller").start();
         span.setTag("customerID", customerID);
         span.log(ImmutableMap.of("event", "Get Customer", "value", "Received get customer request", "id", customerID));
+        span.setBaggageItem("loggedInUser", "Amandeep");
 
         try (Scope scope = tracer.scopeManager().activate(span)) {
             List<Customer> customers =  customerService.findCustomer(customerID);
