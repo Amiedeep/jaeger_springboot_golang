@@ -17,8 +17,8 @@ var (
 func CreateSeeddata() {
 	conn := GetConn()
 
-	conn.Do("HMSET", 1, "OrderID", 21, "Name", "Burger")
-	conn.Do("HMSET", 2, "OrderID", 31, "Name", "Pizza")
+	conn.Do("HMSET", 1, "OrderID", 21, "Name", "Burger", "CustomerID", 1)
+	conn.Do("HMSET", 2, "OrderID", 31, "Name", "Pizza", "CustomerID", 2)
 
 	conn.Close()
 }
