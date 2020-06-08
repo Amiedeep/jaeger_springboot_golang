@@ -30,6 +30,9 @@ func ReturnOrder(w http.ResponseWriter, r *http.Request) {
 	span.SetTag("customerID", customerID)
 	span.LogKV("event", "Get Orders", "value", "Received get orders request for a customer", "customerID", customerID)
 
+	loggedInUser := span.BaggageItem("loggedinuser")
+	span.SetTag("loggedInUser", loggedInUser)
+
 	Find(ctx, customerID, &order)
 
 	json.NewEncoder(w).Encode(order)
