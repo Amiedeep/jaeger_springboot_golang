@@ -79,3 +79,15 @@ Order service is running on port 8081; You can curl it using:
 ```bash
 curl http://localhost:8081/orders?customerID=2
 ```
+
+## Compare traces
+
+There is a separate API for comparing traces in Jaeger. This API is calling order service 3 times and hence differ in calls to /customer endpoint.
+
+```bash
+curl localhost:8080/compare/customer/1
+```
+
+## Baggage
+
+Name of the logged in user is set as a baggage item in customer service. It travels with all http requests to order service and set as a tag in `order` span.
