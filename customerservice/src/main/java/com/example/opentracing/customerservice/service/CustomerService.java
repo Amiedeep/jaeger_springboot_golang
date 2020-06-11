@@ -30,25 +30,10 @@ public class CustomerService {
 
         Map<String, Object> response = new HashMap<String, Object>();
 
-        Span span = postgresTracer.buildSpan("postgres").asChildOf(GlobalTracer.get().activeSpan()).start();
-
-        try (Scope scope = postgresTracer.scopeManager().activate(span)) {
-            span.log(ImmutableMap.of("event", "Searching customer", "id", customerID));
-            Customer customer = customerRepository.findByid(customerID);
-            if(customer == null) {
-                span.log(ImmutableMap.of("event", "customer not found", "id", customerID));
-                Tags.ERROR.set(span, true);
-                response.put("Error", "Customer not found");
-                return response;
-            }
-            span.log(ImmutableMap.of("event", "found customer", "name", customer.name));
-            response.put("Customer", customer);
-            String orders = getHttp(8081, "orders", customerID);
-            response.put("Orders", orders);
-        }
-        finally{
-            span.finish();
-        }
+        Customer customer = customerRepository.findByid(customerID);
+        response.put("Customer", customer);
+        String orders = getHttp(8081, "orders", customerID);
+        response.put("Orders", orders);
         return response;
     }
 
@@ -56,28 +41,13 @@ public class CustomerService {
 
         getHttp(8081, "orders", customerID);
         getHttp(8081, "orders", customerID);
-        
+
         Map<String, Object> response = new HashMap<String, Object>();
 
-        Span span = postgresTracer.buildSpan("postgres").asChildOf(GlobalTracer.get().activeSpan()).start();
-
-        try (Scope scope = postgresTracer.scopeManager().activate(span)) {
-            span.log(ImmutableMap.of("event", "Searching customer", "id", customerID));
-            Customer customer = customerRepository.findByid(customerID);
-            if(customer == null) {
-                span.log(ImmutableMap.of("event", "customer not found", "id", customerID));
-                Tags.ERROR.set(span, true);
-                response.put("Error", "Customer not found");
-                return response;
-            }
-            span.log(ImmutableMap.of("event", "found customer", "name", customer.name));
-            response.put("Customer", customer);
-            String orders = getHttp(8081, "orders", customerID);
-            response.put("Orders", orders);
-        }
-        finally{
-            span.finish();
-        }
+        Customer customer = customerRepository.findByid(customerID);
+        response.put("Customer", customer);
+        String orders = getHttp(8081, "orders", customerID);
+        response.put("Orders", orders);
         return response;
     }
 }
