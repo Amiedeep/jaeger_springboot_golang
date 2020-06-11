@@ -24,35 +24,16 @@ public class CustomerController {
     @Autowired
     private CustomerService customerService;
 
-    Tracer tracer = GlobalTracer.get();
 
     @RequestMapping("/customer/{customerID}")
     public ResponseEntity<Object> get(@PathVariable long customerID) {
-        Span span = tracer.buildSpan("controller").start();
-        span.setTag("customerID", customerID);
-        span.log(ImmutableMap.of("event", "Get Customer", "value", "Received get customer request", "id", customerID));
-        span.setBaggageItem("loggedInUser", "Amandeep");
-
-        try (Scope scope = tracer.scopeManager().activate(span)) {
-            Map<String, Object> customer =  customerService.findCustomer(customerID);
-            return ResponseEntity.status(HttpStatus.OK).body(customer);
-        } finally{
-            span.finish();
-        }
+        Map<String, Object> customer =  customerService.findCustomer(customerID);
+        return ResponseEntity.status(HttpStatus.OK).body(customer);
     }
 
     @RequestMapping("/compare/customer/{customerID}")
     public ResponseEntity<Object> compare(@PathVariable long customerID) {
-        Span span = tracer.buildSpan("controller").start();
-        span.setTag("customerID", customerID);
-        span.log(ImmutableMap.of("event", "Get Customer", "value", "Received get customer request", "id", customerID));
-        span.setBaggageItem("loggedInUser", "Amandeep");
-
-        try (Scope scope = tracer.scopeManager().activate(span)) {
-            Map<String, Object> customer =  customerService.compareCustomer(customerID);
-            return ResponseEntity.status(HttpStatus.OK).body(customer);
-        } finally{
-            span.finish();
-        }
+        Map<String, Object> customer =  customerService.compareCustomer(customerID);
+        return ResponseEntity.status(HttpStatus.OK).body(customer);
     }
 }

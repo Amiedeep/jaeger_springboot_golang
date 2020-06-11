@@ -2,16 +2,12 @@ package com.example.opentracing.customerservice.service;
 
 import com.example.opentracing.customerservice.model.Customer;
 import com.example.opentracing.customerservice.repository.CustomerRepository;
-import com.example.opentracing.customerservice.utils.Tracing;
-import com.google.common.collect.ImmutableMap;
-import io.opentracing.Scope;
-import io.opentracing.Span;
-import io.opentracing.Tracer;
-import io.opentracing.tag.Tags;
-import io.opentracing.util.GlobalTracer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import io.opentracing.tag.Tags;
+import io.opentracing.util.GlobalTracer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,7 +21,6 @@ public class CustomerService {
     @Autowired
     private CustomerRepository customerRepository;
 
-    Tracer postgresTracer = Tracing.init("postgres");
 
     @Value("${orderservice.host}")
     private String orderServiceHost;
@@ -33,29 +28,23 @@ public class CustomerService {
     @Value("${orderservice.port}")
     private int orderServicePort;
 
+
     public Map<String, Object> findCustomer(long customerID) {
 
         Map<String, Object> response = new HashMap<String, Object>();
 
-        Span span = postgresTracer.buildSpan("postgres").asChildOf(GlobalTracer.get().activeSpan()).start();
+        Customer customer = customerRepository.findByid(customerID);
 
-        try (Scope scope = postgresTracer.scopeManager().activate(span)) {
-            span.log(ImmutableMap.of("event", "Searching customer", "id", customerID));
-            Customer customer = customerRepository.findByid(customerID);
-            if(customer == null) {
-                span.log(ImmutableMap.of("event", "customer not found", "id", customerID));
-                Tags.ERROR.set(span, true);
-                response.put("Error", "Customer not found");
-                return response;
-            }
-            span.log(ImmutableMap.of("event", "found customer", "name", customer.name));
-            response.put("Customer", customer);
-            String orders = getHttp(orderServiceHost, orderServicePort, "orders", customerID);
-            response.put("Orders", orders);
+        if (customer == null) {
+            Tags.ERROR.set(GlobalTracer.get().activeSpan(), true);
+            response.put("error", "Customer not found");
+            return response;
         }
-        finally{
-            span.finish();
-        }
+
+        producer.sendMessage("Found customer: " + customer.name);
+        response.put("Customer", customer);
+        String orders = getHttp(orderServiceHost, orderServicePort, "orders", customerID);
+        response.put("Orders", orders);
         return response;
     }
 
@@ -66,25 +55,16 @@ public class CustomerService {
         
         Map<String, Object> response = new HashMap<String, Object>();
 
-        Span span = postgresTracer.buildSpan("postgres").asChildOf(GlobalTracer.get().activeSpan()).start();
+        Customer customer = customerRepository.findByid(customerID);
 
-        try (Scope scope = postgresTracer.scopeManager().activate(span)) {
-            span.log(ImmutableMap.of("event", "Searching customer", "id", customerID));
-            Customer customer = customerRepository.findByid(customerID);
-            if(customer == null) {
-                span.log(ImmutableMap.of("event", "customer not found", "id", customerID));
-                Tags.ERROR.set(span, true);
-                response.put("Error", "Customer not found");
-                return response;
-            }
-            span.log(ImmutableMap.of("event", "found customer", "name", customer.name));
-            response.put("Customer", customer);
-            String orders = getHttp(orderServiceHost, orderServicePort, "orders", customerID);
-            response.put("Orders", orders);
+
+        if (customer == null) {
+            Tags.ERROR.set(GlobalTracer.get().activeSpan(), true);
         }
-        finally{
-            span.finish();
-        }
+
+        response.put("Customer", customer);
+        String orders = getHttp(orderServiceHost, orderServicePort, "orders", customerID);
+        response.put("Orders", orders);
         return response;
     }
 }
