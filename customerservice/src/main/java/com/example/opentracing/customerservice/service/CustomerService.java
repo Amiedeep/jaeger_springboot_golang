@@ -2,6 +2,8 @@ package com.example.opentracing.customerservice.service;
 
 import com.example.opentracing.customerservice.model.Customer;
 import com.example.opentracing.customerservice.repository.CustomerRepository;
+import io.opentracing.tag.Tags;
+import io.opentracing.util.GlobalTracer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +28,12 @@ public class CustomerService {
 
         Customer customer = customerRepository.findByid(customerID);
 
+        if (customer == null) {
+            Tags.ERROR.set(GlobalTracer.get().activeSpan(), true);
+            response.put("error", "Customer not found");
+            return response;
+        }
+
         producer.sendMessage("Found customer: " + customer.name);
         response.put("Customer", customer);
         String orders = getHttp(9090, "orders", customerID);
@@ -41,6 +49,10 @@ public class CustomerService {
         Map<String, Object> response = new HashMap<String, Object>();
 
         Customer customer = customerRepository.findByid(customerID);
+
+        if (customer == null) {
+            Tags.ERROR.set(GlobalTracer.get().activeSpan(), true);
+        }
 
         producer.sendMessage("Found customer: " + customer.name);
 
