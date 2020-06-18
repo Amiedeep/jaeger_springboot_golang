@@ -3,6 +3,7 @@ package com.example.opentracing.customerservice.controller;
 
 import com.example.opentracing.customerservice.model.Customer;
 import com.example.opentracing.customerservice.service.CustomerService;
+import com.example.opentracing.customerservice.service.Producer;
 import io.opentracing.Scope;
 import io.opentracing.Span;
 import io.opentracing.Tracer;

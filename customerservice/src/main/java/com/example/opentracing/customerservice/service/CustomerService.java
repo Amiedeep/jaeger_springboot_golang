@@ -17,27 +17,35 @@ public class CustomerService {
     @Autowired
     private CustomerRepository customerRepository;
 
+    @Autowired
+    private Producer producer;
+
     public Map<String, Object> findCustomer(long customerID) {
 
         Map<String, Object> response = new HashMap<String, Object>();
 
         Customer customer = customerRepository.findByid(customerID);
+
+        producer.sendMessage("Found customer: " + customer.name);
         response.put("Customer", customer);
-        String orders = getHttp(8081, "orders", customerID);
+        String orders = getHttp(9090, "orders", customerID);
         response.put("Orders", orders);
         return response;
     }
 
     public Map<String, Object> compareCustomer(long customerID) {
 
-        getHttp(8081, "orders", customerID);
-        getHttp(8081, "orders", customerID);
+        getHttp(9090, "orders", customerID);
+        getHttp(9090, "orders", customerID);
 
         Map<String, Object> response = new HashMap<String, Object>();
 
         Customer customer = customerRepository.findByid(customerID);
+
+        producer.sendMessage("Found customer: " + customer.name);
+
         response.put("Customer", customer);
-        String orders = getHttp(8081, "orders", customerID);
+        String orders = getHttp(9090, "orders", customerID);
         response.put("Orders", orders);
         return response;
     }

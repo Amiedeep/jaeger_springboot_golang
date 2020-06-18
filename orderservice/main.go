@@ -23,7 +23,7 @@ func handleRequests() {
 	myRouter := mux.NewRouter().StrictSlash(true)
 	myRouter.Path("/orders").Queries("customerID", "{customerID}").HandlerFunc(app.ReturnOrder)
 
-	log.Println("Listening on localhost:8081")
-	log.Fatal(http.ListenAndServe(":8081", nethttp.Middleware(tracer, myRouter)))
-	log.Fatal(http.ListenAndServe(":8081", nethttp.Middleware(tracer, myRouter)))
+	log.Println("Listening on localhost:9090")
+	log.Fatal(http.ListenAndServe(":9090", nethttp.Middleware(tracer, myRouter)))
+	log.Fatal(http.ListenAndServe(":9090", nethttp.Middleware(tracer, myRouter)))
 }
