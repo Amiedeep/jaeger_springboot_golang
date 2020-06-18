@@ -74,10 +74,10 @@ Navigate to Jaeger from browser: http://localhost:16686/
 
 > You should see 4 services in Jaeger including Customer, Order, postgres, and redis. Search traces of Customer service and it should have 5 spans created, and trace data of all four services invoked with the request.
 
-Order service is running on port 8081; You can curl it using:
+Order service is running on port 9090; You can curl it using:
 
 ```bash
-curl http://localhost:8081/orders?customerID=2
+curl http://localhost:9090/orders?customerID=2
 ```
 
 ## Compare traces
@@ -91,3 +91,10 @@ curl localhost:8080/compare/customer/1
 ## Baggage
 
 Name of the logged in user is set as a baggage item in customer service. It travels with all http requests to order service and set as a tag in `order` span.
+
+## Kafka Tracing
+
+### Pre-requisites
+ * Please make sure that kafka cluster is running. Please follow this [article](https://docs.confluent.io/current/quickstart/ce-docker-quickstart.html) for all-in-one docker-compose setup.
+
+> **Note:** You can change cluster endpoint configs in this [file](customerservice/src/main/resources/application.yml) 
