@@ -21,13 +21,14 @@ public class CustomerService {
     @Autowired
     private CustomerRepository customerRepository;
 
-
     @Value("${orderservice.host}")
     private String orderServiceHost;
 
     @Value("${orderservice.port}")
     private int orderServicePort;
 
+    @Autowired
+    private Producer producer;
 
     public Map<String, Object> findCustomer(long customerID) {
 
@@ -64,6 +65,8 @@ public class CustomerService {
 
         response.put("Customer", customer);
         String orders = getHttp(orderServiceHost, orderServicePort, "orders", customerID);
+        producer.sendMessage("Found customer: " + customer.name);
+
         response.put("Orders", orders);
         return response;
     }
