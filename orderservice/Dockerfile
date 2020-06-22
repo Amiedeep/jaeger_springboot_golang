@@ -1,7 +1,7 @@
 FROM golang:1.14.3
 
-ENV JAEGER_AGENT_HOST jaeger
+ENV GO111MODULE=on
 WORKDIR /app
-COPY main.go go.mod go.sum /app/
+COPY . /app/
 
 CMD go run main.go
