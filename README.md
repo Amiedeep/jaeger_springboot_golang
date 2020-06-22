@@ -2,7 +2,7 @@
 
 This project consists of two rudimentary micro-services having separate databases with one using Postgres and other Redis. The aim of this project is to setup, learn Jaeger, and Open Tracing standards in a micro-services environment.
 
-> **Note:** This branch has kafka instrumentation. Please read the [kafka section](#Kafka-Tracing) to know more. If you do not want kafka, please checkout to [no_kafka](github.com/Amiedeep/jaeger_springboot_golang/tree/no_kafka) branch. Besides, `no_kafka` branch has instrumentaion on how to treat postgres as a separate service in Open Tracing.
+> **Note:** This branch has kafka instrumentation. Please read the [kafka section](#Kafka-Tracing) to know more. If you do not want kafka, please checkout to [no_kafka](/amiedeep/jaeger_springboot_golang/tree/no_kafka) branch. Besides, `no_kafka` branch has instrumentaion on how to treat postgres as a separate service in Open Tracing.
 
 > **Note:** This project is done only for experimental purposes and should only be used as a reference.
 
