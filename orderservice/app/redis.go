@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"os"
 
 	"github.com/gomodule/redigo/redis"
 	"github.com/opentracing/opentracing-go"
@@ -11,7 +12,17 @@ import (
 
 var (
 	redisTracer, _ = tracing.Init("redis")
+	redisURL       = getEnvValue("redis_url", "localhost")
 )
+
+func getEnvValue(field string, fallback string) string {
+	value := os.Getenv(field)
+
+	if len(value) != 0 {
+		return value
+	}
+	return fallback
+}
 
 //CreateSeeddata creates initial orders
 func CreateSeeddata() {
@@ -25,7 +36,7 @@ func CreateSeeddata() {
 
 //GetConn return redis connection
 func GetConn() redis.Conn {
-	conn, err := redis.Dial("tcp", "localhost:6379")
+	conn, err := redis.Dial("tcp", redisURL+":6379")
 
 	if err != nil {
 		panic(err.Error())
