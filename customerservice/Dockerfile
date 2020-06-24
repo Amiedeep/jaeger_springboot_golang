@@ -17,5 +17,7 @@ WORKDIR /app
 
 EXPOSE 8080
 
+ENV DB_HOST=postgres
+
 CMD java -jar customerservice.jar
 COPY --from=build /build/target/customerservice.jar /app/customerservice.jar
