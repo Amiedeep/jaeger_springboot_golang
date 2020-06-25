@@ -1,0 +1,10 @@
+postgresql:
+  service:
+    type: NodePort
+redis:
+  master:
+    service:
+      type: NodePort
+  slave:
+    service:
+      type: NodePort
