@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "helm-chart.order-service.fullname" . }}
+  labels:
+    app: {{ template "helm-chart.order-service.name" . }}
+    chart: {{ template "helm-chart.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "helm-chart.order-service.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "helm-chart.order-service.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.orderservice.image.repository }}:{{ .Values.orderservice.image.tag }}"
+        imagePullPolicy: {{ .Values.orderservice.image.pullPolicy }}
+        env:
+          - name: OUTPUT_HOST
+            value: {{ .Values.output.host | quote }}
+          {{- range $key, $value := .Values.env }}
+          - name: {{ $key | quote }}
+            value: {{ $value | quote }}
+          {{- end }}
+        ports:
+{{- range $port := .Values.service.ports }}
+          - name: {{ $port.name }}
+            containerPort: {{ $port.containerPort }}
+            protocol: {{ $port.protocol }}
+{{- end }}
+          - name: http-input
+            containerPort: 9880
+            protocol: TCP
