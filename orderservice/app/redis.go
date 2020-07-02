@@ -12,7 +12,7 @@ import (
 
 var (
 	redisTracer, _ = tracing.Init("redis")
-	redisURL       = getEnvValue("redis_url", "localhost")
+	redisURL       = getEnvValue("REDIS_URL", "localhost")
 )
 
 func getEnvValue(field string, fallback string) string {

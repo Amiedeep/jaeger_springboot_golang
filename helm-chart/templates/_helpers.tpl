@@ -6,8 +6,8 @@ Expand the name of the chart.
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
-{{- define "helm-chart.order-service.name" -}}
-{{- printf "%s-%s" .Chart.Name "order-service" | trunc 63 | trimSuffix "-" -}}
+{{- define "helm-chart.orderservice.name" -}}
+{{- printf "%s-%s" .Chart.Name "orderservice" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
@@ -28,7 +28,7 @@ If release name contains chart name it will be used as a full name.
 {{- end -}}
 {{- end -}}
 
-{{- define "helm-chart.order-service.fullname" -}}
+{{- define "helm-chart.orderservice.fullname" -}}
 {{- if .Values.fullnameOverride -}}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
@@ -36,7 +36,7 @@ If release name contains chart name it will be used as a full name.
 {{- if contains $name .Release.Name -}}
 {{- .Release.Name | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
-{{- printf "%s-%s-%s" .Release.Name $name "order-service" | trunc 63 | trimSuffix "-" -}}
+{{- printf "%s-%s-%s" .Release.Name $name "orderservice" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 {{- end -}}
 {{- end -}}

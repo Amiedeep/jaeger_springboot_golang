@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "helm-chart.orderservice.fullname" . }}
+  labels:
+    app: {{ template "helm-chart.orderservice.name" . }}
+    chart: {{ template "helm-chart.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: {{ .Values.orderservice.service.type }}
+  ports:
+    - name: "order-service"
+      targetPort: 8081
+      port: 8081
+  {{ if (and (eq .Values.orderservice.service.type "NodePort") (not (empty .Values.orderservice.service.nodePort))) }}
+      nodePort: {{ .Values.orderservice.service.nodePort }}
+  {{ end }}
+  selector:
+    app: {{ template "helm-chart.orderservice.name" . }}
+    release: {{ .Release.Name }}
