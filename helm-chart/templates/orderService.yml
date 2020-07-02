@@ -1,40 +1,31 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "helm-chart.order-service.fullname" . }}
+  name: {{ template "helm-chart.orderservice.fullname" . }}
   labels:
-    app: {{ template "helm-chart.order-service.name" . }}
+    app: {{ template "helm-chart.orderservice.name" . }}
     chart: {{ template "helm-chart.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
   selector:
     matchLabels:
-      app: {{ template "helm-chart.order-service.name" . }}
+      app: {{ template "helm-chart.orderservice.name" . }}
       release: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: {{ template "helm-chart.order-service.name" . }}
+        app: {{ template "helm-chart.orderservice.name" . }}
         release: {{ .Release.Name }}
     spec:
       containers:
-      - name: {{ .Chart.Name }}
+      - name: {{ template "helm-chart.orderservice.name" . }}
         image: "{{ .Values.orderservice.image.repository }}:{{ .Values.orderservice.image.tag }}"
         imagePullPolicy: {{ .Values.orderservice.image.pullPolicy }}
         env:
-          - name: OUTPUT_HOST
-            value: {{ .Values.output.host | quote }}
-          {{- range $key, $value := .Values.env }}
-          - name: {{ $key | quote }}
-            value: {{ $value | quote }}
-          {{- end }}
+          - name: REDIS_URL
+            value: {{ .Values.orderservice.redis.host | quote }}
         ports:
-{{- range $port := .Values.service.ports }}
-          - name: {{ $port.name }}
-            containerPort: {{ $port.containerPort }}
-            protocol: {{ $port.protocol }}
-{{- end }}
-          - name: http-input
-            containerPort: 9880
+          - name: http
+            containerPort: 8080
             protocol: TCP

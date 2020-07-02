@@ -5,11 +5,7 @@ redis:
   master:
     service:
       type: NodePort
+      # nodePort: 30001
   slave:
     service:
       type: NodePort
-
-orderservice:
-  image:  amiedeep/orderservice
-  tag: 1.0.0
-  pullPolicy: IfNotPresent
