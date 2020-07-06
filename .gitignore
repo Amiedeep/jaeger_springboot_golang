@@ -17,6 +17,9 @@ customerservice/.idea
 .idea
 customerservice/target
 
+orderservice/orderservice
+orderservice/vendor
+
 *.iws
 *.iml
 *.ipr
