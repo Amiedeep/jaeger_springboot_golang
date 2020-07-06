@@ -5,13 +5,13 @@ import (
 	"net/http"
 
 	app "github.com/amiedeep/jaeger_springboot_golang/orderservice/app"
+	tracing "github.com/amiedeep/jaeger_springboot_golang/orderservice/pkg"
 	"github.com/gorilla/mux"
 	"github.com/opentracing-contrib/go-stdlib/nethttp"
-	"github.com/yurishkuro/opentracing-tutorial/go/lib/tracing"
 )
 
 var (
-	tracer, _ = tracing.Init("order")
+	tracer = tracing.Init("order")
 )
 
 func main() {

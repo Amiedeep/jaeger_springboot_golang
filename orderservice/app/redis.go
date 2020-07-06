@@ -4,15 +4,15 @@ import (
 	"context"
 	"os"
 
+	tracing "github.com/amiedeep/jaeger_springboot_golang/orderservice/pkg"
 	"github.com/gomodule/redigo/redis"
 	"github.com/opentracing/opentracing-go"
 	tags "github.com/opentracing/opentracing-go/ext"
-	"github.com/yurishkuro/opentracing-tutorial/go/lib/tracing"
 )
 
 var (
-	redisTracer, _ = tracing.Init("redis")
-	redisURL       = getEnvValue("REDIS_URL", "localhost")
+	redisTracer = tracing.Init("redis")
+	redisURL    = getEnvValue("REDIS_URL", "localhost")
 )
 
 func getEnvValue(field string, fallback string) string {
