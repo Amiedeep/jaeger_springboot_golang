@@ -4,7 +4,11 @@ orderservice:
     nodePort: 30001
   image:
     repository: amiedeep/orderservice
-    tag: 1.1.0
+    tag: 1.2.1
     pullPolicy: IfNotPresent
   redis:
-    host: demo-app-redis-master
+    host: demo-app-redis-master 
+
+  jaegeragent:
+    host: jaeger-agent
+    port: 6831

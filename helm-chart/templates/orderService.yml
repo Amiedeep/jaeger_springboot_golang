@@ -25,6 +25,10 @@ spec:
         env:
           - name: REDIS_URL
             value: {{ .Values.orderservice.redis.host | quote }}
+          - name: JAEGER_AGENT_HOST
+            value: {{ .Values.orderservice.jaegeragent.host | quote }} 
+          - name: JAEGER_AGENT_PORT
+            value: {{ .Values.orderservice.jaegeragent.port | quote }}
         ports:
           - name: http
             containerPort: 8080

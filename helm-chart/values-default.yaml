@@ -2,6 +2,7 @@ postgresql:
   service:
     type: NodePort
 redis:
+  usePassword: false
   master:
     service:
       type: NodePort
