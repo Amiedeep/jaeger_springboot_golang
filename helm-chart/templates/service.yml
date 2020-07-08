@@ -1,3 +1,4 @@
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -18,4 +19,26 @@ spec:
   {{ end }}
   selector:
     app: {{ template "helm-chart.orderservice.name" . }}
+    release: {{ .Release.Name }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "helm-chart.customerservice.fullname" . }}
+  labels:
+    app: {{ template "helm-chart.customerservice.name" . }}
+    chart: {{ template "helm-chart.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: {{ .Values.customerservice.service.type }}
+  ports:
+    - name: "customer-service"
+      targetPort: 8080
+      port: 8080
+  {{ if (and (eq .Values.customerservice.service.type "NodePort") (not (empty .Values.customerservice.service.nodePort))) }}
+      nodePort: {{ .Values.customerservice.service.nodePort }}
+  {{ end }}
+  selector:
+    app: {{ template "helm-chart.customerservice.name" . }}
     release: {{ .Release.Name }}

@@ -1,3 +1,17 @@
+postgresql:
+  postgresqlUsername: postgres
+  postgresqlPassword: admin
+  service:
+    type: NodePort
+redis:
+  usePassword: false
+  master:
+    service:
+      type: NodePort
+      # nodePort: 30001
+  slave:
+    service:
+      type: NodePort
 orderservice:
   service:
     type: NodePort
@@ -9,6 +23,16 @@ orderservice:
   redis:
     host: demo-app-redis-master 
 
-  jaegeragent:
-    host: jaeger-agent
-    port: 6831
+customerservice:
+  service:
+    type: NodePort
+    nodePort: 30004
+  image:
+    repository: amiedeep/customerservice
+    tag: 1.0.0
+    pullPolicy: IfNotPresent
+  postgres:
+    host: demo-app-postgresql
+jaegeragent:
+  host: jaeger-agent
+  port: 6831
