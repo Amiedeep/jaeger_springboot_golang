@@ -35,14 +35,14 @@ public class http {
         };
     }
 
-    public static String getHttp(int port, String path, long customerID) {
+    public static String getHttp(String host, int port, String path, long customerID) {
         Tracer tracer = GlobalTracer.get();
         Span span = tracer.buildSpan("order-service client").start();
 
         try (Scope scope = tracer.scopeManager().activate(span)) {
 
 
-            HttpUrl url = new HttpUrl.Builder().scheme("http").host("localhost").port(port).addPathSegment(path)
+            HttpUrl url = new HttpUrl.Builder().scheme("http").host(host).port(port).addPathSegment(path)
                     .addQueryParameter("customerID", String.valueOf(customerID)).build();
             Request.Builder requestBuilder = new Request.Builder().url(url);
 

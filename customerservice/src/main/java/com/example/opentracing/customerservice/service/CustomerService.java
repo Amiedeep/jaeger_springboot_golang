@@ -10,6 +10,7 @@ import io.opentracing.Tracer;
 import io.opentracing.tag.Tags;
 import io.opentracing.util.GlobalTracer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -25,6 +26,12 @@ public class CustomerService {
     private CustomerRepository customerRepository;
 
     Tracer postgresTracer = Tracing.init("postgres");
+
+    @Value("${orderservice.host}")
+    private String orderServiceHost;
+
+    @Value("${orderservice.port}")
+    private int orderServicePort;
 
     public Map<String, Object> findCustomer(long customerID) {
 
@@ -43,7 +50,7 @@ public class CustomerService {
             }
             span.log(ImmutableMap.of("event", "found customer", "name", customer.name));
             response.put("Customer", customer);
-            String orders = getHttp(8081, "orders", customerID);
+            String orders = getHttp(orderServiceHost, orderServicePort, "orders", customerID);
             response.put("Orders", orders);
         }
         finally{
@@ -54,8 +61,8 @@ public class CustomerService {
 
     public Map<String, Object> compareCustomer(long customerID) {
 
-        getHttp(8081, "orders", customerID);
-        getHttp(8081, "orders", customerID);
+        getHttp(orderServiceHost, orderServicePort, "orders", customerID);
+        getHttp(orderServiceHost, orderServicePort, "orders", customerID);
         
         Map<String, Object> response = new HashMap<String, Object>();
 
@@ -72,7 +79,7 @@ public class CustomerService {
             }
             span.log(ImmutableMap.of("event", "found customer", "name", customer.name));
             response.put("Customer", customer);
-            String orders = getHttp(8081, "orders", customerID);
+            String orders = getHttp(orderServiceHost, orderServicePort, "orders", customerID);
             response.put("Orders", orders);
         }
         finally{
