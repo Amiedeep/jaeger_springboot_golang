@@ -1,7 +1,7 @@
 orderservice:
   service:
     type: NodePort
-    nodePort: 30001
+    nodePort: 30003
   image:
     repository: amiedeep/orderservice
     tag: 1.2.1
