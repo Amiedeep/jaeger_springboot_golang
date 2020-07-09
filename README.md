@@ -93,3 +93,7 @@ curl localhost:8080/compare/customer/1
 ## Baggage
 
 Name of the logged in user is set as a baggage item in customer service. It travels with all http requests to order service and set as a tag in `order` span.
+
+## Helm Chart
+
+For instructions on how to deploy helm chart for this project please checkout to [Helm Setup](./helm-chart/README.md).
