@@ -2,7 +2,7 @@
 
 This project consists of two rudimentary micro-services having separate databases with one using Postgres and other Redis. The aim of this project is to setup, learn Jaeger, and Open Tracing standards in a micro-services environment.
 
-> **Note:** This branch has kafka instrumentation. Please read the [kafka section](#Kafka-Tracing) to know more. If you do not want kafka, please checkout to [no_kafka](../../tree/no_kafka) branch. Besides, `no_kafka` branch has instrumentaion on how to treat postgres as a separate service in Open Tracing.
+> **Note:** [kafka](../../tree/kafka) branch has some kafka instrumentation. Please read the [kafka section] in that branch to know more. Also, `no_kafka` branch has instrumentaion on how to treat postgres as a separate service in Open Tracing.
 
 > **Note:** This project is done only for experimental purposes and should only be used as a reference.
 
@@ -93,10 +93,3 @@ curl localhost:8080/compare/customer/1
 ## Baggage
 
 Name of the logged in user is set as a baggage item in customer service. It travels with all http requests to order service and set as a tag in `order` span.
-
-## Kafka Tracing
-
-### Pre-requisites
- * Please make sure that kafka cluster is running. Please follow this [article](https://docs.confluent.io/current/quickstart/ce-docker-quickstart.html) for all-in-one docker-compose setup.
-
-> **Note:** You can change cluster endpoint configs in this [file](customerservice/src/main/resources/application.yml) 
