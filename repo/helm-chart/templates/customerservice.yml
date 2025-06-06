@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "helm-chart.customerservice.fullname" . }}
+  labels:
+    app: {{ template "helm-chart.customerservice.name" . }}
+    chart: {{ template "helm-chart.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "helm-chart.customerservice.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "helm-chart.customerservice.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+      - name: {{ template "helm-chart.customerservice.name" . }}
+        image: "{{ .Values.customerservice.image.repository }}:{{ .Values.customerservice.image.tag }}"
+        imagePullPolicy: {{ .Values.customerservice.image.pullPolicy }}
+        env:
+          - name: DB_HOST
+            value: {{ .Values.customerservice.postgres.host | quote }} 
+          - name: DB_USERNAME
+            value: {{ .Values.postgresql.postgresqlUsername | quote }} 
+          - name: DB_PASSWORD
+            value: {{ .Values.postgresql.postgresqlPassword | quote }}
+          - name: ORDER_SERVICE_HOST
+            value: {{ template "helm-chart.orderservice.fullname" . }}
+          - name: JAEGER_AGENT_HOST
+            value: {{ .Values.jaegeragent.host | quote }} 
+          - name: JAEGER_AGENT_PORT
+            value: {{ .Values.jaegeragent.port | quote }}
