@@ -1,0 +1,8 @@
+# This action will append to existing topics.yaml or create it
+fno-topic:
+  partitions: 3
+  retention_ms: 604800000
+  config:
+    cleanup.policy: delete
+    compression.type: snappy
+    min.insync.replicas: 2
