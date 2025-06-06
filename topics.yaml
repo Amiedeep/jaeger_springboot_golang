@@ -1,0 +1,8 @@
+# This action will append to existing topics.yaml or create it
+ajit:
+  partitions: 8
+  retention_ms: 36000000
+  config:
+    cleanup.policy: delete
+    compression.type: snappy
+    min.insync.replicas: 2
