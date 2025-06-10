@@ -1,0 +1,11 @@
+# This action will append to chart.yaml or create it
+apiVersion: v2
+name: crossplane-bucket-values-chart
+description: A Helm chart for cloud buckets on crossplane
+type: application
+version: 0.0.1
+appVersion: "0.8.1"
+dependencies:
+  - name: crossplane-bucket
+    version: "1.0.1"
+    repository: "Some_repo"
