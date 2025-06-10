@@ -1,0 +1,79 @@
+# This action will append to values.yaml or create it
+crossplane-bucket: 
+  labels:
+    region: asia-south1
+    project: gw-backend-production
+
+  namespace: default
+
+  # # (Optional) Override the provider config
+  # # This can be used to chnage the Cloud project where the resource is deployed
+  # providerConfigRef:
+  #   name: uat-pc
+
+  # # (Optional) Over ride management policy of how a resource is controlled
+  managementPolicies: ["Create","Observe","Update"]
+
+  bucket:
+    # # (Required) name of the bucket, default region for bucket deployment(Mumbai,delhi)
+    - name: Test
+      location: asia-south1
+      uniformBucketLevelAccess: true
+    
+      storageClass: STANDARD
+  
+      versioning:
+      - enabled: false
+
+      publicAccessPrevention: inherited
+
+    # # (Optional) params for advanced configuration 
+      extraConfiguration:
+
+    #       # (Optional) Enables object retention on a storage bucket.
+          enableObjectRetention: false
+
+          lifecycleRule:
+            - action:
+                - storageClass: ''
+                  type: Delete
+              condition:
+                - age: 0
+                  matchesSuffix:
+                    - .exe
+                    - .scr
+                    - .msi
+                    - .jar
+                    - .bat
+                    - .cmd
+                    - .vbs
+                    - .hta
+                    - .ps1
+                    - .lnk
+                    - .docm
+                    - .xlsm
+                    - .pptm
+                    - .reg
+                    - .php
+                    - .py
+                    - .tar
+                    - .pkg
+                    - .map
+
+      permissions:
+  # permission to give on defined bucket
+      - role: CustomStorageLegacyObjectReader
+        members:
+        - "allUsers"
+
+
+apiVersion: v2
+name: crossplane-bucket-values-chart
+description: A Helm chart for cloud buckets on crossplane
+type: application
+version: 0.0.1
+appVersion: "0.8.1"
+dependencies:
+  - name: crossplane-bucket
+    version: "1.0.1"
+    repository: "some_repo"
