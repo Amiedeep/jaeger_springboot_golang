@@ -21,4 +21,4 @@ spec:
   owner: guests
   system: examples
   dependsOn:
-  - component:default:customerservice
+  - component:customerservice

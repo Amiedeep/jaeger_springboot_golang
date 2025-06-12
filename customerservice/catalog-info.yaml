@@ -21,4 +21,4 @@ spec:
   owner: guests
   system: examples
   dependencyOf:
-  - component:default:orderservice
+  - component:orderservice
