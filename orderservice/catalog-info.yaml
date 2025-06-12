@@ -20,3 +20,5 @@ spec:
   lifecycle: production
   owner: guests
   system: examples
+  dependsOn:
+  - component:default:customerservice
