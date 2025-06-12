@@ -1,0 +1,22 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: customerservice
+  namespace: default
+  description: A microservice
+  labels:
+    example.com/team: onboarding
+  annotations:
+    example.com/service-discovery: customerservice
+  tags:
+    - java
+  links:
+    - url: https://admin.example-org.com
+      title: Admin Dashboard
+      icon: dashboard
+      type: admin-dashboard
+spec:
+  type: website
+  lifecycle: production
+  owner: guests
+  system: examples
